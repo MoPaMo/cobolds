@@ -50,7 +50,8 @@ export default function LearnPage() {
               navigator.share({
                 title:
                   "Learn COBOL - Lesson " + lesson.id + ": " + lesson.title,
-                text: "Check out this COBOL lesson on " + window.location.href,
+                text:
+                  "Check out this COBOL lesson on " + window.location.hostname,
                 url: window.location.href,
               });
             }}
