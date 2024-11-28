@@ -16,7 +16,6 @@ import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
 
 import lessons from "@/app/data/lessons";
-
 export default function LearnPage() {
   const params = useParams();
   if (!params) {
@@ -30,7 +29,24 @@ export default function LearnPage() {
     // raise 404 error
     return notFound();
   }
-    
+  // set current lesson to local storage
+  localStorage.setItem("currentLesson", JSON.stringify(lesson.id));
+  const lessonLikes = JSON.parse(localStorage.getItem("lessonLikes") || "[]");
+
+  const [liked, setLiked] = useState(lessonLikes.includes(lesson.id));
+  useEffect(() => {
+    if (liked) {
+      if (!lessonLikes.includes(lesson.id)) {
+        lessonLikes.push(lesson.id);
+      }
+    } else {
+      const index = lessonLikes.indexOf(lesson.id);
+      if (index > -1) {
+        lessonLikes.splice(index, 1);
+      }
+    }
+    localStorage.setItem("lessonLikes", JSON.stringify(lessonLikes));
+  }, [liked, lesson.id, lessonLikes]);
 
   const keyTakeaways = lesson ? lesson.keyTakeaways : [];
   const text = lesson ? lesson.text : "";
@@ -42,8 +58,15 @@ export default function LearnPage() {
         </h1>
         <div className="grow"></div>
         <div className="flex flex-row gap-3">
-          <Button variant="secondary">
-            <Heart />
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setLiked((l: any) => {
+                return !l;
+              });
+            }}
+          >
+            {liked ? <Heart fill="true"></Heart> : <Heart />}
           </Button>
           <Button
             variant="secondary"
@@ -67,7 +90,13 @@ export default function LearnPage() {
           {/* Lesson Content Panel */}
           <ResizablePanel defaultSize={40}>
             <div className="h-full overflow-y-auto">
-              <LessonContent keyTakeaways={keyTakeaways}>{text}</LessonContent>
+              <LessonContent
+                keyTakeaways={keyTakeaways}
+                nextLesson={lessons[lessonNumber + 1]}
+                prevLesson={lessons[lessonNumber - 1]}
+              >
+                {text}
+              </LessonContent>
             </div>
           </ResizablePanel>
 
@@ -77,6 +106,7 @@ export default function LearnPage() {
           <ResizablePanel defaultSize={60}>
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel defaultSize={60}>
+                {/* Code Editor */}
                 <CodeEditor />
               </ResizablePanel>
 
