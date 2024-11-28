@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Play } from 'lucide-react'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 
 export function CodeEditor() {
   const [code, setCode] = useState(`       IDENTIFICATION DIVISION.
@@ -10,12 +10,17 @@ export function CodeEditor() {
        
        PROCEDURE DIVISION.
            DISPLAY "Hello, World!".
-           STOP RUN.`)
+           STOP RUN.`);
 
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/50">
-        <div className="text-sm font-medium">main.cbl</div>
+        <div className="flex items-center gap-2  ">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <span className="ml-2 text-zinc-500 text-sm">main.cbl</span>
+        </div>
         <Button size="sm" variant="default">
           <Play className="h-4 w-4 mr-2" />
           Run
@@ -31,6 +36,5 @@ export function CodeEditor() {
         />
       </div>
     </div>
-  )
+  );
 }
-
