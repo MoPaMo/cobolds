@@ -34,7 +34,7 @@ export default function LearnPage() {
 
   const [liked, setLiked] = useState(false);
   const [keyTakeaways, setKeyTakeaways] = useState<string[]>([]);
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState(<></>);
 
   useEffect(() => {
     // Ensure window is available
@@ -51,7 +51,7 @@ export default function LearnPage() {
 
       // Set key takeaways and text
       setKeyTakeaways(lesson.keyTakeaways || []);
-      setText(lesson.text || []);
+      setText(lesson.text);
     }
   }, [lesson]);
 
