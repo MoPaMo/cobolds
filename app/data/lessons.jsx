@@ -1,7 +1,7 @@
 const lessons = [
   {
     id: 1,
-    title: "Lesson 1: Introduction to React",
+    title: "Introduction to React",
     description: "In this lesson, we will learn about the basics of React.",
     duration: "1 hour",
     created_at: "2021-01-01",

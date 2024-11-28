@@ -1,6 +1,7 @@
 "use client";
 import { CodeEditor } from "@/components/code-editor";
 import { LessonContent } from "@/components/lesson-content";
+import { Button } from "@/components/ui/button";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -36,13 +37,26 @@ export default function LearnPage() {
     <div className="h-screen flex flex-col">
       <header className="border-b bg-card px-6 py-3 flex flex-row">
         <h1 className="text-xl font-semibold">
-          Learn COBOL - Lesson {lessonNumber}: Introduction
+          Learn COBOL - Lesson {lesson.id}: {lesson.title}
         </h1>
         <div className="grow"></div>
         <div className="flex flex-row gap-3">
-          {slug}
-          <Heart />
-          <Share />
+          <Button variant="secondary">
+            <Heart />
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              navigator.share({
+                title:
+                  "Learn COBOL - Lesson " + lesson.id + ": " + lesson.title,
+                text: "Check out this COBOL lesson on " + window.location.href,
+                url: window.location.href,
+              });
+            }}
+          >
+            <Share />
+          </Button>
         </div>
       </header>
 
