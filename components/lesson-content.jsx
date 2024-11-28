@@ -8,8 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-export function LessonContent({ keyTakeaways, children }) {
+import Link from "next/link";
+export function LessonContent({
+  keyTakeaways,
+  children,
+  nextLesson,
+  prevLesson,
+}) {
   return (
     <div className="p-6 space-y-6">
       <div className="prose prose-zinc dark:prose-invert max-w-none">
@@ -33,14 +38,32 @@ export function LessonContent({ keyTakeaways, children }) {
       </Card>
 
       <div className="flex items-center justify-between pt-4 border-t">
-        <Button variant="outline" disabled>
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          Previous Lesson
-        </Button>
-        <Button>
-          Next Lesson
-          <ChevronRight className="ml-2 h-4 w-4" />
-        </Button>
+        {(prevLesson && (
+          <Link href={`/learn/${prevLesson.id}`}>
+            <Button variant="outline">
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Previous Lesson
+            </Button>
+          </Link>
+        )) || (
+          <Button variant="outline" disabled>
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Previous Lesson
+          </Button>
+        )}
+        {(nextLesson && (
+          <Link href={`/learn/${nextLesson.id}`}>
+            <Button>
+              Next Lesson
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        )) || (
+          <Button disabled>
+            Next Lesson
+            <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+        )}
       </div>
     </div>
   );
