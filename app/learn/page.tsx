@@ -9,6 +9,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
 import { useState } from "react";
+import { Share, Heart } from "lucide-react";
 
 export default function LearnPage() {
   const [text, setText] = useState(
@@ -19,10 +20,15 @@ export default function LearnPage() {
   ]);
   return (
     <div className="h-screen flex flex-col">
-      <header className="border-b bg-card px-6 py-3">
+      <header className="border-b bg-card px-6 py-3 flex flex-row">
         <h1 className="text-xl font-semibold">
           Learn COBOL - Lesson 1: Introduction
         </h1>
+        <div className="grow"></div>
+        <div className="flex flex-row gap-3">
+          <Heart></Heart>
+          <Share></Share>
+        </div>
       </header>
 
       <main className="flex-1 overflow-hidden">
