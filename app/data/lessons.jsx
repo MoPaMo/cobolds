@@ -15,6 +15,8 @@ const lessons = [
       "Setting up a React project",
       "Creating a simple React component",
     ],
+    code: `const element = <h1>Hello, world!</h1>;`,
+    output: `<h1>Hello, world!</h1>`,
   },
   {
     id: 2,
@@ -32,6 +34,10 @@ const lessons = [
       "Creating functional and class components",
       "Passing props to components",
     ],
+    code: `function Welcome(props) {
+    return <h1>Hello, {props.name}</h1>;
+}`,
+    output: `<h1>Hello, Sara</h1>`,
   },
   {
     id: 3,
@@ -49,6 +55,8 @@ const lessons = [
       "Using the useEffect hook",
       "Building custom hooks",
     ],
+    code: `const [count, setCount] = useState(0);`,
+    output: `0`,
   },
 ];
 export default lessons;

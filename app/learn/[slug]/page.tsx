@@ -11,7 +11,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
 import { useState, useEffect } from "react"; // Removed unused 'use'
-import { Share, Heart } from "lucide-react";
+import { Share, Heart, HeartOff } from "lucide-react";
 
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
@@ -88,7 +88,7 @@ export default function LearnPage() {
               setLiked((prev) => !prev);
             }}
           >
-            {liked ? <Heart fill /> : <Heart />}
+            {liked ? <HeartOff /> : <Heart />}
           </Button>
           <Button
             variant="secondary"
@@ -139,13 +139,13 @@ export default function LearnPage() {
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel defaultSize={60}>
                 {/* Code Editor */}
-                <CodeEditor />
+                <CodeEditor text={lesson.code} />
               </ResizablePanel>
 
               <ResizableHandle />
 
               <ResizablePanel defaultSize={40}>
-                <Terminal />
+                <Terminal text={lesson.out} />
               </ResizablePanel>
             </ResizablePanelGroup>
           </ResizablePanel>
