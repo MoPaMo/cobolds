@@ -1,4 +1,5 @@
 "use client";
+
 import { CodeEditor } from "@/components/code-editor";
 import { LessonContent } from "@/components/lesson-content";
 import { Button } from "@/components/ui/button";
@@ -9,13 +10,14 @@ import {
 } from "@/components/ui/resizable";
 import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
-import { use, useState, useEffect } from "react";
+import { useState, useEffect } from "react"; // Removed unused 'use'
 import { Share, Heart } from "lucide-react";
 
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
 
 import lessons from "@/app/data/lessons";
+
 export default function LearnPage() {
   const params = useParams();
   if (!params) {
@@ -24,32 +26,54 @@ export default function LearnPage() {
   const slug = params.slug as string;
   const lessonNumber = Number(slug.split("-").pop());
 
-  const lesson = lessons.find((lesson) => lesson.id == lessonNumber);
+  const lesson = lessons.find((lesson) => lesson.id === lessonNumber);
   if (!lesson) {
-    // raise 404 error
+    // Raise 404 error
     return notFound();
   }
-  // set current lesson to local storage
-  localStorage.setItem("currentLesson", JSON.stringify(lesson.id));
-  const lessonLikes = JSON.parse(localStorage.getItem("lessonLikes") || "[]");
 
-  const [liked, setLiked] = useState(lessonLikes.includes(lesson.id));
+  const [liked, setLiked] = useState(false);
+  const [keyTakeaways, setKeyTakeaways] = useState<string[]>([]);
+  const [text, setText] = useState<string>("");
+
   useEffect(() => {
-    if (liked) {
-      if (!lessonLikes.includes(lesson.id)) {
-        lessonLikes.push(lesson.id);
-      }
-    } else {
-      const index = lessonLikes.indexOf(lesson.id);
-      if (index > -1) {
-        lessonLikes.splice(index, 1);
-      }
-    }
-    localStorage.setItem("lessonLikes", JSON.stringify(lessonLikes));
-  }, [liked, lesson.id, lessonLikes]);
+    // Ensure window is available
+    if (typeof window !== "undefined") {
+      // Set current lesson to local storage
+      window.localStorage.setItem("currentLesson", JSON.stringify(lesson.id));
 
-  const keyTakeaways = lesson ? lesson.keyTakeaways : [];
-  const text = lesson ? lesson.text : "";
+      // Retrieve lesson likes
+      const storedLikes = window.localStorage.getItem("lessonLikes");
+      const lessonLikes = storedLikes ? JSON.parse(storedLikes) : [];
+
+      // Initialize liked state
+      setLiked(lessonLikes.includes(lesson.id));
+
+      // Set key takeaways and text
+      setKeyTakeaways(lesson.keyTakeaways || []);
+      setText(lesson.text || []);
+    }
+  }, [lesson]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedLikes = window.localStorage.getItem("lessonLikes");
+      const lessonLikes: number[] = storedLikes ? JSON.parse(storedLikes) : [];
+
+      if (liked) {
+        if (!lessonLikes.includes(lesson.id)) {
+          lessonLikes.push(lesson.id);
+        }
+      } else {
+        const index = lessonLikes.indexOf(lesson.id);
+        if (index > -1) {
+          lessonLikes.splice(index, 1);
+        }
+      }
+      window.localStorage.setItem("lessonLikes", JSON.stringify(lessonLikes));
+    }
+  }, [liked, lesson.id]);
+
   return (
     <div className="h-screen flex flex-col">
       <header className="border-b bg-card px-6 py-3 flex flex-row">
@@ -61,23 +85,31 @@ export default function LearnPage() {
           <Button
             variant="secondary"
             onClick={() => {
-              setLiked((l: any) => {
-                return !l;
-              });
+              setLiked((prev) => !prev);
             }}
           >
-            {liked ? <Heart fill="true"></Heart> : <Heart />}
+            {liked ? <Heart fill /> : <Heart />}
           </Button>
           <Button
             variant="secondary"
             onClick={() => {
-              navigator.share({
-                title:
-                  "Learn COBOL - Lesson " + lesson.id + ": " + lesson.title,
-                text:
-                  "Check out this COBOL lesson on " + window.location.hostname,
-                url: window.location.href,
-              });
+              if (navigator.share) {
+                navigator
+                  .share({
+                    title:
+                      "Learn COBOL - Lesson " + lesson.id + ": " + lesson.title,
+                    text:
+                      "Check out this COBOL lesson on " +
+                      window.location.hostname,
+                    url: window.location.href,
+                  })
+                  .catch((error) => {
+                    console.error("Error sharing:", error);
+                  });
+              } else {
+                // Fallback for browsers that do not support the Web Share API
+                alert("Share not supported on this browser.");
+              }
             }}
           >
             <Share />
@@ -92,8 +124,8 @@ export default function LearnPage() {
             <div className="h-full overflow-y-auto">
               <LessonContent
                 keyTakeaways={keyTakeaways}
-                nextLesson={lessons[lessonNumber + 1]}
-                prevLesson={lessons[lessonNumber - 1]}
+                nextLesson={lessons[lessonNumber]}
+                prevLesson={lessons[lessonNumber - 2]}
               >
                 {text}
               </LessonContent>
