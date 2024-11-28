@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/resizable";
 import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
-import { useState } from "react";
+import { use, useState, useEffect } from "react";
 import { Share, Heart } from "lucide-react";
 
 import { useParams } from "next/navigation";
@@ -30,6 +30,7 @@ export default function LearnPage() {
     // raise 404 error
     return notFound();
   }
+    
 
   const keyTakeaways = lesson ? lesson.keyTakeaways : [];
   const text = lesson ? lesson.text : "";
