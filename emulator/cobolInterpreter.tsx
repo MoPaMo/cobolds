@@ -38,23 +38,23 @@ export function cobolInterpreter(code: string): InterpreterResult {
     const divisions = splitDivisions(code);
 
     // Process DATA DIVISION
-    if (divisions['DATA DIVISION']) {
-      parseDataDivision(divisions['DATA DIVISION'], environment);
+    if (divisions["DATA DIVISION"]) {
+      parseDataDivision(divisions["DATA DIVISION"], environment);
     }
 
     // Process ENVIRONMENT DIVISION
-    if (divisions['ENVIRONMENT DIVISION']) {
-      parseEnvironmentDivision(divisions['ENVIRONMENT DIVISION'], environment);
+    if (divisions["ENVIRONMENT DIVISION"]) {
+      parseEnvironmentDivision(divisions["ENVIRONMENT DIVISION"], environment);
     }
 
     // Process PROCEDURE DIVISION
-    if (divisions['PROCEDURE DIVISION']) {
-      const lines = preprocessCode(divisions['PROCEDURE DIVISION']);
+    if (divisions["PROCEDURE DIVISION"]) {
+      const lines = preprocessCode(divisions["PROCEDURE DIVISION"]);
       executeProcedureDivision(lines, environment, (text) => {
-        output += text + '\n';
+        output += text + "\n";
       });
     } else {
-      throw new Error('Missing PROCEDURE DIVISION.');
+      throw new Error("Missing PROCEDURE DIVISION.");
     }
   } catch (error: any) {
     output += `Error: ${error.message}`;
@@ -69,13 +69,14 @@ export function cobolInterpreter(code: string): InterpreterResult {
  * @returns An object mapping division names to their content.
  */
 function splitDivisions(code: string): { [key: string]: string } {
-  const divisionRegex = /(IDENTIFICATION DIVISION\.|ENVIRONMENT DIVISION\.|DATA DIVISION\.|PROCEDURE DIVISION\.)/gi;
+  const divisionRegex =
+    /(IDENTIFICATION DIVISION\.|ENVIRONMENT DIVISION\.|DATA DIVISION\.|PROCEDURE DIVISION\.)/gi;
   const parts = code.split(divisionRegex);
   const divisions: { [key: string]: string } = {};
 
   for (let i = 1; i < parts.length; i += 2) {
-    const divisionName = parts[i].replace('.', '').trim().toUpperCase();
-    const divisionContent = parts[i + 1] || '';
+    const divisionName = parts[i].replace(".", "").trim().toUpperCase();
+    const divisionContent = parts[i + 1] || "";
     divisions[divisionName] = divisionContent;
   }
   return divisions;
@@ -109,10 +110,10 @@ function parseDataDivision(dataDivision: string, environment: Environment) {
  */
 function initializeVariable(picClause: string): any {
   // Simplified initialization based on PIC clause
-  if (picClause.startsWith('9')) {
+  if (picClause.startsWith("9")) {
     return 0; // Numeric
-  } else if (picClause.startsWith('X')) {
-    return ''; // Alphanumeric
+  } else if (picClause.startsWith("X")) {
+    return ""; // Alphanumeric
   }
   return null;
 }
@@ -122,7 +123,10 @@ function initializeVariable(picClause: string): any {
  * @param envDivision - Content of the ENVIRONMENT DIVISION.
  * @param environment - The execution environment.
  */
-function parseEnvironmentDivision(envDivision: string, environment: Environment) {
+function parseEnvironmentDivision(
+  envDivision: string,
+  environment: Environment
+) {
   const lines = preprocessCode(envDivision);
 }
 
@@ -134,8 +138,8 @@ function parseEnvironmentDivision(envDivision: string, environment: Environment)
 function preprocessCode(codeSection: string): string[] {
   return codeSection
     .split(/\r?\n/)
-    .map((line) => line.split('*')[0].trim()) // Remove comments starting with '*'
-    .filter((line) => line !== '');
+    .map((line) => line.split("*")[0].trim()) // Remove comments starting with '*'
+    .filter((line) => line !== "");
 }
 
 /**
@@ -158,33 +162,33 @@ function executeProcedureDivision(
     idxRef.idx = idx;
 
     // Handle DISPLAY statements
-    if (line.startsWith('DISPLAY')) {
+    if (line.startsWith("DISPLAY")) {
       const contentMatch = line.match(/DISPLAY\s+(.*)/i);
       if (contentMatch) {
         const content = contentMatch[1];
         const evaluated = evaluateExpression(content, environment);
         outputCallback(String(evaluated));
       } else {
-        throw new Error('Invalid DISPLAY statement.');
+        throw new Error("Invalid DISPLAY statement.");
       }
       idx++;
     }
     // Handle ACCEPT statements (input)
-    else if (line.startsWith('ACCEPT')) {
+    else if (line.startsWith("ACCEPT")) {
       const varNameMatch = line.match(/ACCEPT\s+(\w+)/i);
       if (varNameMatch) {
         const varName = varNameMatch[1];
         // Simulate input (In actual implementation, replace with input handling)
         // For security reasons, 'prompt' is not available in some environments
         // Here, we simulate input as an empty string or a predefined value
-        environment.variables[varName] = ''; // Placeholder for input
+        environment.variables[varName] = ""; // Placeholder for input
       } else {
-        throw new Error('Invalid ACCEPT statement.');
+        throw new Error("Invalid ACCEPT statement.");
       }
       idx++;
     }
     // Handle MOVE statements (assignment)
-    else if (line.startsWith('MOVE')) {
+    else if (line.startsWith("MOVE")) {
       const moveMatch = line.match(/MOVE\s+(.*)\s+TO\s+(\w+)/i);
       if (moveMatch) {
         const valueExpr = moveMatch[1];
@@ -192,7 +196,7 @@ function executeProcedureDivision(
         const value = evaluateExpression(valueExpr, environment);
         environment.variables[varName] = value;
       } else {
-        throw new Error('Invalid MOVE statement.');
+        throw new Error("Invalid MOVE statement.");
       }
       idx++;
     }
@@ -202,23 +206,23 @@ function executeProcedureDivision(
       idx++;
     }
     // Handle IF statements
-    else if (line.startsWith('IF')) {
+    else if (line.startsWith("IF")) {
       idx = handleIfStatement(lines, idx, environment, outputCallback);
     }
     // Handle PERFORM loops
-    else if (line.startsWith('PERFORM')) {
+    else if (line.startsWith("PERFORM")) {
       idx = handlePerformLoop(lines, idx, environment, outputCallback);
     }
     // Handle EVALUATE statements (Switch-case)
-    else if (line.startsWith('EVALUATE')) {
+    else if (line.startsWith("EVALUATE")) {
       idx = handleEvaluateStatement(lines, idx, environment, outputCallback);
     }
     // Handle STRING statements
-    else if (line.startsWith('STRING')) {
+    else if (line.startsWith("STRING")) {
       idx = handleStringStatement(lines, idx, environment);
     }
     // Handle UNSTRING statements
-    else if (line.startsWith('UNSTRING')) {
+    else if (line.startsWith("UNSTRING")) {
       idx = handleUnstringStatement(lines, idx, environment);
     }
     // Handle STOP RUN
@@ -239,10 +243,13 @@ function executeProcedureDivision(
  * @param environment - The execution environment.
  */
 function handleArithmeticOperation(line: string, environment: Environment) {
-  const [_, operation, operandsPart] = line.match(/(ADD|SUBTRACT|MULTIPLY|DIVIDE)\s+(.*)/i) || [];
+  const [_, operation, operandsPart] =
+    line.match(/(ADD|SUBTRACT|MULTIPLY|DIVIDE)\s+(.*)/i) || [];
   if (operation && operandsPart) {
     const operands = operandsPart.split(/\s+TO\s+/i);
-    const operandValues = operands[0].split(/\s+AND\s+/i).map((op) => evaluateExpression(op, environment));
+    const operandValues = operands[0]
+      .split(/\s+AND\s+/i)
+      .map((op) => evaluateExpression(op, environment));
 
     const varNameMatch = operands[1]?.match(/(\w+)/);
     if (varNameMatch) {
@@ -251,18 +258,18 @@ function handleArithmeticOperation(line: string, environment: Environment) {
 
       for (const value of operandValues) {
         switch (operation.toUpperCase()) {
-          case 'ADD':
+          case "ADD":
             result += value;
             break;
-          case 'SUBTRACT':
+          case "SUBTRACT":
             result -= value;
             break;
-          case 'MULTIPLY':
+          case "MULTIPLY":
             result *= value;
             break;
-          case 'DIVIDE':
+          case "DIVIDE":
             if (value === 0) {
-              throw new Error('Division by zero.');
+              throw new Error("Division by zero.");
             }
             result /= value;
             break;
@@ -300,8 +307,8 @@ function handleIfStatement(
     const falseBlock: string[] = [];
     let currentBlock = trueBlock;
 
-    while (idx < lines.length && !lines[idx].startsWith('END-IF')) {
-      if (lines[idx].startsWith('ELSE')) {
+    while (idx < lines.length && !lines[idx].startsWith("END-IF")) {
+      if (lines[idx].startsWith("ELSE")) {
         currentBlock = falseBlock;
         idx++;
         continue;
@@ -315,13 +322,13 @@ function handleIfStatement(
       executeProcedureDivision(falseBlock, environment, outputCallback);
     }
     // Move past END-IF
-    if (idx < lines.length && lines[idx].startsWith('END-IF')) {
+    if (idx < lines.length && lines[idx].startsWith("END-IF")) {
       idx++;
     } else {
-      throw new Error('Missing END-IF for IF statement.');
+      throw new Error("Missing END-IF for IF statement.");
     }
   } else {
-    throw new Error('Invalid IF statement.');
+    throw new Error("Invalid IF statement.");
   }
   return idx;
 }
@@ -346,7 +353,7 @@ function handlePerformLoop(
     const times = parseInt(timesMatch[1]);
     idx++;
     const loopBody: string[] = [];
-    while (idx < lines.length && !lines[idx].startsWith('END-PERFORM')) {
+    while (idx < lines.length && !lines[idx].startsWith("END-PERFORM")) {
       loopBody.push(lines[idx]);
       idx++;
     }
@@ -354,10 +361,10 @@ function handlePerformLoop(
       executeProcedureDivision(loopBody, environment, outputCallback);
     }
     // Move past END-PERFORM
-    if (idx < lines.length && lines[idx].startsWith('END-PERFORM')) {
+    if (idx < lines.length && lines[idx].startsWith("END-PERFORM")) {
       idx++;
     } else {
-      throw new Error('Missing END-PERFORM for PERFORM loop.');
+      throw new Error("Missing END-PERFORM for PERFORM loop.");
     }
     return idx;
   }
@@ -368,7 +375,7 @@ function handlePerformLoop(
     const condition = untilMatch[1];
     idx++;
     const loopBody: string[] = [];
-    while (idx < lines.length && !lines[idx].startsWith('END-PERFORM')) {
+    while (idx < lines.length && !lines[idx].startsWith("END-PERFORM")) {
       loopBody.push(lines[idx]);
       idx++;
     }
@@ -376,15 +383,15 @@ function handlePerformLoop(
       executeProcedureDivision(loopBody, environment, outputCallback);
     }
     // Move past END-PERFORM
-    if (idx < lines.length && lines[idx].startsWith('END-PERFORM')) {
+    if (idx < lines.length && lines[idx].startsWith("END-PERFORM")) {
       idx++;
     } else {
-      throw new Error('Missing END-PERFORM for PERFORM loop.');
+      throw new Error("Missing END-PERFORM for PERFORM loop.");
     }
     return idx;
   }
 
-  throw new Error('Unsupported PERFORM statement format.');
+  throw new Error("Unsupported PERFORM statement format.");
 }
 
 /**
@@ -408,8 +415,8 @@ function handleEvaluateStatement(
     const cases: { condition: string; body: string[] }[] = [];
     let defaultCase: string[] = [];
 
-    while (idx < lines.length && !lines[idx].startsWith('END-EVALUATE')) {
-      if (lines[idx].startsWith('WHEN')) {
+    while (idx < lines.length && !lines[idx].startsWith("END-EVALUATE")) {
+      if (lines[idx].startsWith("WHEN")) {
         const whenMatch = lines[idx].match(/WHEN\s+(.*)/i);
         if (whenMatch) {
           const condition = whenMatch[1];
@@ -417,20 +424,20 @@ function handleEvaluateStatement(
           const caseBody: string[] = [];
           while (
             idx < lines.length &&
-            !lines[idx].startsWith('WHEN') &&
-            !lines[idx].startsWith('END-EVALUATE') &&
-            !lines[idx].startsWith('WHEN OTHER')
+            !lines[idx].startsWith("WHEN") &&
+            !lines[idx].startsWith("END-EVALUATE") &&
+            !lines[idx].startsWith("WHEN OTHER")
           ) {
             caseBody.push(lines[idx]);
             idx++;
           }
           cases.push({ condition, body: caseBody });
         } else {
-          throw new Error('Invalid WHEN statement.');
+          throw new Error("Invalid WHEN statement.");
         }
-      } else if (lines[idx].startsWith('WHEN OTHER')) {
+      } else if (lines[idx].startsWith("WHEN OTHER")) {
         idx++;
-        while (idx < lines.length && !lines[idx].startsWith('END-EVALUATE')) {
+        while (idx < lines.length && !lines[idx].startsWith("END-EVALUATE")) {
           defaultCase.push(lines[idx]);
           idx++;
         }
@@ -456,13 +463,13 @@ function handleEvaluateStatement(
     }
 
     // Move past END-EVALUATE
-    if (idx < lines.length && lines[idx].startsWith('END-EVALUATE')) {
+    if (idx < lines.length && lines[idx].startsWith("END-EVALUATE")) {
       idx++;
     } else {
-      throw new Error('Missing END-EVALUATE for EVALUATE statement.');
+      throw new Error("Missing END-EVALUATE for EVALUATE statement.");
     }
   } else {
-    throw new Error('Invalid EVALUATE statement.');
+    throw new Error("Invalid EVALUATE statement.");
   }
   return idx;
 }
@@ -483,7 +490,7 @@ function handleStringStatement(
   if (stringMatch) {
     const components = stringMatch[1].split(/\s+DELIMITED BY SIZE\s+/i);
     const targetVar = stringMatch[2];
-    let result = '';
+    let result = "";
 
     for (const comp of components) {
       const value = evaluateExpression(comp.trim(), environment);
@@ -494,7 +501,7 @@ function handleStringStatement(
     idx++;
     return idx;
   }
-  throw new Error('Invalid STRING statement.');
+  throw new Error("Invalid STRING statement.");
 }
 
 /**
@@ -509,11 +516,13 @@ function handleUnstringStatement(
   idx: number,
   environment: Environment
 ): number {
-  const unstringMatch = lines[idx].match(/UNSTRING\s+(\w+)\s+DELIMITED BY SIZE\s+INTO\s+(.*)/i);
+  const unstringMatch = lines[idx].match(
+    /UNSTRING\s+(\w+)\s+DELIMITED BY SIZE\s+INTO\s+(.*)/i
+  );
   if (unstringMatch) {
     const sourceVar = unstringMatch[1];
     const targetVars = unstringMatch[2].split(/\s+/).map((v) => v.trim());
-    const sourceValue = String(environment.variables[sourceVar] || '');
+    const sourceValue = String(environment.variables[sourceVar] || "");
     const segmentLength = Math.floor(sourceValue.length / targetVars.length);
 
     targetVars.forEach((varName, index) => {
@@ -524,7 +533,7 @@ function handleUnstringStatement(
     idx++;
     return idx;
   }
-  throw new Error('Invalid UNSTRING statement.');
+  throw new Error("Invalid UNSTRING statement.");
 }
 
 /**
@@ -538,13 +547,18 @@ function evaluateExpression(expr: string, environment: Environment): any {
   expr = expr.trim();
 
   // Handle concatenated expressions separated by space
-  if (expr.includes(' ')) {
-    const parts = expr.split(/\s+/).map((part) => evaluateExpression(part, environment));
-    return parts.join(' ');
+  if (expr.includes(" ")) {
+    const parts = expr
+      .split(/\s+/)
+      .map((part) => evaluateExpression(part, environment));
+    return parts.join(" ");
   }
 
   // Handle quoted strings
-  if ((expr.startsWith('"') && expr.endsWith('"')) || (expr.startsWith("'") && expr.endsWith("'"))) {
+  if (
+    (expr.startsWith('"') && expr.endsWith('"')) ||
+    (expr.startsWith("'") && expr.endsWith("'"))
+  ) {
     return expr.slice(1, -1);
   }
 
@@ -560,15 +574,15 @@ function evaluateExpression(expr: string, environment: Environment): any {
     const operator = arithmeticMatch[2];
     const right = evaluateExpression(arithmeticMatch[3], environment);
     switch (operator) {
-      case '+':
+      case "+":
         return left + right;
-      case '-':
+      case "-":
         return left - right;
-      case '*':
+      case "*":
         return left * right;
-      case '/':
+      case "/":
         if (right === 0) {
-          throw new Error('Division by zero.');
+          throw new Error("Division by zero.");
         }
         return left / right;
     }
@@ -589,26 +603,31 @@ function evaluateExpression(expr: string, environment: Environment): any {
  * @param environment - The execution environment.
  * @returns True if the condition is met, otherwise false.
  */
-function evaluateCondition(condition: string, environment: Environment): boolean {
-  const operators = ['=', '<>', '>', '<', '>=', '<='];
+function evaluateCondition(
+  condition: string,
+  environment: Environment
+): boolean {
+  const operators = ["=", "<>", ">", "<", ">=", "<="];
   let operator = operators.find((op) => condition.includes(` ${op} `));
 
   if (operator) {
-    const [leftExpr, rightExpr] = condition.split(` ${operator} `).map((side) => side.trim());
+    const [leftExpr, rightExpr] = condition
+      .split(` ${operator} `)
+      .map((side) => side.trim());
     const left = evaluateExpression(leftExpr, environment);
     const right = evaluateExpression(rightExpr, environment);
     switch (operator) {
-      case '=':
+      case "=":
         return left === right;
-      case '<>':
+      case "<>":
         return left !== right;
-      case '>':
+      case ">":
         return left > right;
-      case '<':
+      case "<":
         return left < right;
-      case '>=':
+      case ">=":
         return left >= right;
-      case '<=':
+      case "<=":
         return left <= right;
     }
   } else {

@@ -15,16 +15,15 @@ export function LessonContent({
   nextLesson,
   prevLesson,
 }) {
-const parseToUrl=(title)=>{
-title = title.toLowerCase()
-title=title.replaceAll(" ", "-")
-title=title.replaceAll(",", "")
-title=title.replaceAll("&", "")
-title=title.replaceAll("?", "")
-console.log(title)
-return title
-
-}
+  const parseToUrl = (title) => {
+    title = title.toLowerCase();
+    title = title.replaceAll(" ", "-");
+    title = title.replaceAll(",", "");
+    title = title.replaceAll("&", "");
+    title = title.replaceAll("?", "");
+    console.log(title);
+    return title;
+  };
   return (
     <div className="p-6 space-y-6">
       <div className="prose prose-zinc dark:prose-invert max-w-none">
@@ -49,7 +48,9 @@ return title
 
       <div className="flex items-center justify-between pt-4 border-t">
         {(prevLesson && (
-          <Link href={`/learn/${parseToUrl(prevLesson.title)}-${prevLesson.id}`}>
+          <Link
+            href={`/learn/${parseToUrl(prevLesson.title)}-${prevLesson.id}`}
+          >
             <Button variant="outline">
               <ChevronLeft className="mr-2 h-4 w-4" />
               Previous Lesson
@@ -62,7 +63,9 @@ return title
           </Button>
         )}
         {(nextLesson && (
-          <Link href={`/learn/${parseToUrl(nextLesson.title)}-${nextLesson.id}`}>
+          <Link
+            href={`/learn/${parseToUrl(nextLesson.title)}-${nextLesson.id}`}
+          >
             <Button>
               Next Lesson
               <ChevronRight className="ml-2 h-4 w-4" />
