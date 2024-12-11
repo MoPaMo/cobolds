@@ -39,7 +39,7 @@ export default function LearnPage() {
   const [text, setText] = useState(<></>);
 
   // New states for the emulator
-  const [userCode, setUserCode] = useState<string>(lesson.initialCode || "");
+  const [userCode, setUserCode] = useState<string>("");
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
 
   useEffect(() => {
