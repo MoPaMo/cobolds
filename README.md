@@ -2,6 +2,8 @@
 
 A free online ressource to learn COBOLD (in development as I learn COBOLD myself :D) 
 
+Heads up: WIP!
+
 Including 
 > lessons
 >  mock COBOL interpreter
