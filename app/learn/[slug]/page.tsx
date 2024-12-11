@@ -86,10 +86,14 @@ export default function LearnPage() {
     output.push(`$ Running COBOL program...`);
 
     if (
-      lesson.codePatterns &&
-      lesson.codePatterns.every((pattern) => pattern.test(userCode))
+      Array.isArray(lesson.code) &&
+      lesson.code.every((pattern: RegExp) => pattern.test(userCode))
     ) {
-      output.push(lesson.expectedOutput);
+      if (typeof lesson.output === 'string') {
+        output.push(lesson.output);
+      } else {
+        console.error('lesson.output is not a string');
+      }
       output.push(`$ Program completed with return code 0`);
     } else {
       output.push(
