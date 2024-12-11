@@ -81,27 +81,20 @@ export default function LearnPage() {
 
   // Emulator "Run" handler
   const handleRun = () => {
-    const output: string[] = [];
+  const output: string[] = [];
+  output.push(`$ Running COBOL program...`);
 
-    // Simulate terminal command
-    output.push(`$ Running COBOL program...`);
-
-    // Validate each pattern
-    const allPatternsMatch = lesson.codePatterns.every((pattern) =>
-      pattern.test(userCode)
+  if (lesson.codePatterns && lesson.codePatterns.every((pattern) => pattern.test(userCode))) {
+    output.push(lesson.expectedOutput);
+    output.push(`$ Program completed with return code 0`);
+  } else {
+    output.push(
+      `% Error: Your COBOL program has syntax errors or is incomplete. Please review the lesson guidelines and try again.`
     );
+  }
 
-    if (allPatternsMatch) {
-      output.push(lesson.expectedOutput);
-      output.push(`$ Program completed with return code 0`);
-    } else {
-      output.push(
-        `% Error: Your COBOL program has syntax errors or is incomplete. Please review the lesson guidelines and try again.`
-      );
-    }
-
-    setTerminalOutput(output);
-  };
+  setTerminalOutput(output);
+};
 
   return (
     <div className="h-screen flex flex-col">
