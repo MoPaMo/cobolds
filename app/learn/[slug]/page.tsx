@@ -1,3 +1,4 @@
+// cobolds/app/learn/[slug]/page.tsx
 "use client";
 
 import { CodeEditor } from "@/components/code-editor";
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/resizable";
 import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
-import { useState, useEffect } from "react"; // Removed unused 'use'
+import { useState, useEffect } from "react";
 import { Share, Heart, HeartOff } from "lucide-react";
 
 import { useParams } from "next/navigation";
@@ -35,6 +36,10 @@ export default function LearnPage() {
   const [liked, setLiked] = useState(false);
   const [keyTakeaways, setKeyTakeaways] = useState<string[]>([]);
   const [text, setText] = useState(<></>);
+
+  // New states for the emulator
+  const [userCode, setUserCode] = useState<string>(lesson.initialCode || "");
+  const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
 
   useEffect(() => {
     // Ensure window is available
@@ -74,6 +79,30 @@ export default function LearnPage() {
     }
   }, [liked, lesson.id]);
 
+  // Emulator "Run" handler
+  const handleRun = () => {
+    const output: string[] = [];
+
+    // Simulate terminal command
+    output.push(`$ Running COBOL program...`);
+
+    // Validate each pattern
+    const allPatternsMatch = lesson.codePatterns.every((pattern) =>
+      pattern.test(userCode)
+    );
+
+    if (allPatternsMatch) {
+      output.push(lesson.expectedOutput);
+      output.push(`$ Program completed with return code 0`);
+    } else {
+      output.push(
+        `% Error: Your COBOL program has syntax errors or is incomplete. Please review the lesson guidelines and try again.`
+      );
+    }
+
+    setTerminalOutput(output);
+  };
+
   return (
     <div className="h-screen flex flex-col">
       <header className="border-b bg-card px-6 py-3 flex flex-row">
@@ -97,7 +126,10 @@ export default function LearnPage() {
                 navigator
                   .share({
                     title:
-                      "Learn COBOL - Lesson " + lesson.id + ": " + lesson.title,
+                      "Learn COBOL - Lesson " +
+                      lesson.id +
+                      ": " +
+                      lesson.title,
                     text:
                       "Check out this COBOL lesson on " +
                       window.location.hostname,
@@ -139,13 +171,18 @@ export default function LearnPage() {
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel defaultSize={60}>
                 {/* Code Editor */}
-                <CodeEditor text={lesson.code} />
+                <CodeEditor
+                  code={userCode}
+                  onCodeChange={setUserCode}
+                  onRun={handleRun}
+                />
               </ResizablePanel>
 
               <ResizableHandle />
 
               <ResizablePanel defaultSize={40}>
-                <Terminal text={lesson.out} />
+                {/* Terminal */}
+                <Terminal output={terminalOutput} />
               </ResizablePanel>
             </ResizablePanelGroup>
           </ResizablePanel>
