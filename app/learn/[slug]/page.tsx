@@ -12,7 +12,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
 import { useState, useEffect } from "react";
-import { Share, Heart, HeartOff } from "lucide-react";
+import { Share, Heart, HeartOff, Home } from "lucide-react";
+import Link from "next/link";
 
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
@@ -81,26 +82,33 @@ export default function LearnPage() {
 
   // Emulator "Run" handler
   const handleRun = () => {
-  const output: string[] = [];
-  output.push(`$ Running COBOL program...`);
+    const output: string[] = [];
+    output.push(`$ Running COBOL program...`);
 
-  if (lesson.codePatterns && lesson.codePatterns.every((pattern) => pattern.test(userCode))) {
-    output.push(lesson.expectedOutput);
-    output.push(`$ Program completed with return code 0`);
-  } else {
-    output.push(
-      `% Error: Your COBOL program has syntax errors or is incomplete. Please review the lesson guidelines and try again.`
-    );
-  }
+    if (
+      lesson.codePatterns &&
+      lesson.codePatterns.every((pattern) => pattern.test(userCode))
+    ) {
+      output.push(lesson.expectedOutput);
+      output.push(`$ Program completed with return code 0`);
+    } else {
+      output.push(
+        `% Error: Your COBOL program has syntax errors or is incomplete. Please review the lesson guidelines and try again.`
+      );
+    }
 
-  setTerminalOutput(output);
-};
+    setTerminalOutput(output);
+  };
 
   return (
     <div className="h-screen flex flex-col">
       <header className="border-b bg-card px-6 py-3 flex flex-row">
+        <Link href="/">
+          <Home></Home> {" "} 
+        </Link>
+
         <h1 className="text-xl font-semibold">
-          Learn COBOL - Lesson {lesson.id}: {lesson.title}
+           Learn COBOL - Lesson {lesson.id}: {lesson.title}
         </h1>
         <div className="grow"></div>
         <div className="flex flex-row gap-3">
@@ -119,10 +127,7 @@ export default function LearnPage() {
                 navigator
                   .share({
                     title:
-                      "Learn COBOL - Lesson " +
-                      lesson.id +
-                      ": " +
-                      lesson.title,
+                      "Learn COBOL - Lesson " + lesson.id + ": " + lesson.title,
                     text:
                       "Check out this COBOL lesson on " +
                       window.location.hostname,
