@@ -72,7 +72,7 @@ const lessons = [
           The Identification Division is where you provide key details about your COBOL program, like its name and who wrote it. It's the first section in any COBOL program.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -106,7 +106,7 @@ AUTHOR. JOHN DOE.
           The Environment Division sets up the program's environment, like which devices to use for input and output or how to handle file configurations.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -141,7 +141,7 @@ FILE-CONTROL.
           The Data Division is where you define all the data your program will use. It includes sections like the File Section, Working-Storage Section, and Linkage Section.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -175,7 +175,7 @@ WORKING-STORAGE SECTION.
           The Procedure Division is where your COBOL program comes to life with executable instructions. This is where you implement the program's logic using various COBOL statements and operations.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -209,7 +209,7 @@ STOP RUN.
           Once you've written your COBOL code, it's time to compile it. Compiling transforms your source code into an executable form. In this lesson, we'll walk through the basics of compiling and running COBOL programs using popular COBOL compilers.
         </p>
         <p>
-          **Steps:**
+          Steps:
         </p>
         <ol>
           <li>Write your COBOL code and save it with a `.cob` or `.cbl` extension.</li>
@@ -241,7 +241,7 @@ STOP RUN.
           Practice makes perfect! In this lesson, you'll engage in exercises that help you write simple COBOL statements and programs, reinforcing your understanding of the syntax.
         </p>
         <p>
-          **Exercises:**
+          Exercises:
         </p>
         <ol>
           <li>Create a COBOL program that displays your name.</li>
@@ -273,7 +273,7 @@ STOP RUN.
           Variables are the building blocks for storing and manipulating data in your programs. In COBOL, you'll define variables using the PIC clause, which specifies their data type and size.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -307,7 +307,7 @@ STOP RUN.
           Control structures shape the flow of your program. In COBOL, you'll use IF statements for decision-making and PERFORM statements to create loops. These tools help your program respond to different conditions and repeat actions as needed.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -346,7 +346,7 @@ END-PERFORM.
           COBOL excels at handling files. You can set up files in the Environment Division and perform actions like reading from and writing to them in the Procedure Division.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -396,7 +396,7 @@ STOP RUN.
           Strengthen your file handling skills with practical exercises. These tasks will help you become adept at managing files within your COBOL programs.
         </p>
         <p>
-          **Exercises:**
+          Exercises:
         </p>
         <ol>
           <li>Create a COBOL program that reads employee data from a file and displays it.</li>
@@ -431,7 +431,7 @@ STOP RUN.
           Organizing data efficiently is crucial. COBOL offers SORT and MERGE commands to help you arrange and combine data sets seamlessly.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
@@ -466,7 +466,7 @@ SORT EMPLOYEE-FILE
           Put your sorting and merging skills to the test with these practical exercises. You'll learn how to manage and organize data effectively in your COBOL programs.
         </p>
         <p>
-          **Exercises:**
+          Exercises:
         </p>
         <ol>
           <li>Write a COBOL program that sorts employee records by their ID.</li>
@@ -498,7 +498,7 @@ SORT EMPLOYEE-FILE
           Handling multiple data items is easier with arrays and tables. COBOL lets you create these structures to manage collections of similar data efficiently.
         </p>
         <p>
-          **Example:**
+          Example:
         </p>
         <pre>
           {`
