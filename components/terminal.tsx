@@ -1,10 +1,15 @@
+// cobolds/components/terminal.tsx
 "use client";
 
-export function Terminal() {
+interface TerminalProps {
+  output: string[];
+}
+
+export function Terminal({ output }: TerminalProps) {
   return (
     <div className="h-full flex flex-col bg-zinc-950 text-zinc-50">
       <div className="flex items-center px-4 py-2 border-b border-zinc-800 bg-zinc-900">
-        <div className="flex items-center gap-2  ">
+        <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500" />
           <div className="w-3 h-3 rounded-full bg-yellow-500" />
           <div className="w-3 h-3 rounded-full bg-green-500" />
@@ -12,11 +17,9 @@ export function Terminal() {
         </div>
       </div>
       <div className="flex-1 p-4 font-mono text-sm overflow-auto">
-        <div className="text-emerald-400">$ Running COBOL program...</div>
-        <div className="mt-2">Hello, World!</div>
-        <div className="text-emerald-400 mt-2">
-          $ Program completed with return code 0
-        </div>
+        {output.map((line, index) => (
+          <div key={index}>{line}</div>
+        ))}
       </div>
     </div>
   );
