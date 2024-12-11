@@ -104,11 +104,11 @@ export default function LearnPage() {
     <div className="h-screen flex flex-col">
       <header className="border-b bg-card px-6 py-3 flex flex-row">
         <Link href="/">
-          <Home></Home> {" "} 
+          <Home></Home>{" "}
         </Link>
 
         <h1 className="text-xl font-semibold">
-           Learn COBOL - Lesson {lesson.id}: {lesson.title}
+          Learn COBOL - Lesson {lesson.id}: {lesson.title}
         </h1>
         <div className="grow"></div>
         <div className="flex flex-row gap-3">
