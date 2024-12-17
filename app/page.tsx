@@ -73,6 +73,10 @@ export default function Page() {
 
         {/* CTA Section */}
         <div className="mt-20 text-center">
+          <div className="mb-4 bg-red-500 rounded inline-block text-white font-semibold p-2">
+            ⚠️ WIP: This section is under development.
+          </div>
+          <br />
           <Link href="/learn">
             <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
               <Terminal className="mr-2 h-5 w-5" />
