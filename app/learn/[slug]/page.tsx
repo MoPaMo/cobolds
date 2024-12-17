@@ -9,7 +9,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { Card } from "@/components/ui/card";
 import { Terminal } from "@/components/terminal";
 import { useState, useEffect } from "react";
 import { Share, Heart, HeartOff, Home } from "lucide-react";
@@ -20,15 +19,20 @@ import { notFound } from "next/navigation";
 
 import lessons from "@/app/data/lessons";
 
+export async function generateStaticParams() {
+  return lessons.map((lesson) => ({
+    slug: lesson.slug,
+  }));
+}
+
 export default function LearnPage() {
   const params = useParams();
   if (!params) {
     return <div>Error: No parameters found</div>;
   }
   const slug = params.slug as string;
-  const lessonNumber = Number(slug.split("-").pop());
+  const lesson = lessons.find((lesson) => lesson.slug === slug);
 
-  const lesson = lessons.find((lesson) => lesson.id === lessonNumber);
   if (!lesson) {
     // Raise 404 error
     return notFound();
@@ -89,10 +93,15 @@ export default function LearnPage() {
       Array.isArray(lesson.code) &&
       lesson.code.every((pattern: RegExp) => pattern.test(userCode))
     ) {
-      if (typeof lesson.output === 'string') {
-        output.push(lesson.output);
+      if (typeof lesson.output === "function") {
+        const result = lesson.output(userCode);
+        if (typeof result === "string") {
+          output.push(result);
+        } else if (typeof result === "object") {
+          output.push("Output rendered.");
+        }
       } else {
-        console.error('lesson.output is not a string');
+        console.error("lesson.output is not a function");
       }
       output.push(`$ Program completed with return code 0`);
     } else {
@@ -158,8 +167,8 @@ export default function LearnPage() {
             <div className="h-full overflow-y-auto">
               <LessonContent
                 keyTakeaways={keyTakeaways}
-                nextLesson={lessons[lessonNumber]}
-                prevLesson={lessons[lessonNumber - 2]}
+                nextLesson={lessons[lesson.id]}
+                prevLesson={lessons[lesson.id - 2]}
               >
                 {text}
               </LessonContent>
