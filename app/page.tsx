@@ -73,7 +73,7 @@ export default function Page() {
 
         {/* CTA Section */}
         <div className="mt-20 text-center">
-          <Link href="/learn">
+          <Link href="/learn/introduction-1">
             <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
               <Terminal className="mr-2 h-5 w-5" />
               Start Learning COBOL
